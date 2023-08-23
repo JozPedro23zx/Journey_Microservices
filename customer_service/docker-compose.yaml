@@ -1,0 +1,51 @@
+version: '3.9'
+services:
+  customerapp:
+    build: .
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - customerapp-mysql
+      - customerapp-redis
+    networks:
+      - customer-journey
+    ports:
+      - "3000:3000"
+  
+  customerapp-mysql:
+    image: mysql:5.7.22
+    command: --innodb-use-native-aio=0
+    restart: always
+    ports:
+      - "3306"
+    volumes:
+      - "./.docker/dbdata:/var/lib/mysql"
+    environment:
+      MYSQL_DATABASE: customerapp
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - customer-journey
+
+  customerapp-nginx:
+    build: ./.docker/nginx
+    restart: always
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./:/usr/src/app
+    depends_on:
+      - customerapp
+    networks:
+      - customer-journey
+
+  customerapp-redis:
+    image: redis:alpine
+    expose:
+      - 6379
+    networks:
+      - customer-journey
+
+networks:
+  customer-journey:
+    name: network-journey
+    external: true
