@@ -1,3 +1,4 @@
-<p>Crie uma rede do docker com: docker network create network-journey</p>
+Crie uma rede do docker com: docker network create network-journey;
 
-<p>Para criar o tópico do kafka: kafka-topics --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 3 --topic customers</p>
+Para criar o tópico do kafka: kafka-topics --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 3 --topic customers;
+
