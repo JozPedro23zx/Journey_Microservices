@@ -3,7 +3,7 @@ import { Kafka, Producer, ProducerRecord } from 'kafkajs';
 // Configurações do Kafka
 const kafka = new Kafka({
   clientId: 'customer-producer',
-  brokers: ['kafka:9092'], 
+  brokers: [`${process.env.KAFKA_HOST}:${process.env.KAFKA_PORT}`], 
 });
 
 const producer: Producer = kafka.producer();

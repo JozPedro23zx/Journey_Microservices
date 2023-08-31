@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customer-app
+
+  template:
+    metadata:
+      labels:
+        app: customer-app
+    spec:
+      containers:
+      - name: jornada-customer
+        image: jozpedro23/customer_msjourney:v2.2
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        envFrom:
+        - configMapRef:
+            name: customer-app-conf
+        volumeMounts:
+        - name: customer-app-conf
+          subPath: .env
+          mountPath: /usr/src/app/.env
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: customer-mysql-pass
+              key: password
+      
+      volumes:
+      - name: customer-app-conf
+        configMap:
+          name: customer-app-conf
+          items:
+            - key: env
+              path: .env

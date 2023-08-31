@@ -18,10 +18,17 @@ app.use("/", clientRouter)
 
 export let sequelize: Sequelize;
 
+console.log(process.env.DB_HOST)
+console.log(process.env.DB_DATABASE)
+console.log(process.env.DB_USERNAME)
+console.log(process.env.DB_PASSWORD)
+console.log(process.env.CP_HELM_CHARTS_1693306050_CP_SCHEMA_REGISTRY_PORT)
+console.log(process.env.APP_NAME)
+
 async function setupDb() {
   try{
-    sequelize = new Sequelize('customerapp', 'root', 'root',{
-      host: 'customerapp-mysql',
+    sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USERNAME, process.env.DB_PASSWORD,{
+      host: process.env.DB_HOST,
       dialect: "mysql",
     });
     sequelize.addModels([ClientModel, ProductModel, OrderModel, OrderItemsModel]);

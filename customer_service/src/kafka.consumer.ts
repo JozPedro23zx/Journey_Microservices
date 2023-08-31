@@ -12,7 +12,7 @@ import OrderItem from './Modules/domain/order-item.entity';
 // Configurações do Kafka
 const kafka = new Kafka({
   clientId: 'customer-consumer',
-  brokers: ['kafka:9092'], // Coloque aqui o endereço dos brokers do Kafka
+  brokers: [`${process.env.KAFKA_HOST}:${process.env.KAFKA_PORT}`], 
 });
 
 // Crie um consumidor
