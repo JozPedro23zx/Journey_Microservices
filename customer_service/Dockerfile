@@ -10,6 +10,6 @@ COPY . .
 
 RUN npm run build
 
-EXPOSE 9000
+EXPOSE 3000
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]

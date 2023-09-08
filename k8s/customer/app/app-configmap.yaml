@@ -5,50 +5,36 @@ metadata:
   labels:
     name: customer-app-conf
 data:
-  env: |
-    APP_NAME=Customer
-    APP_ENV=local
-    APP_KEY=base64:EO82t0YoNwpYg1yvX2KrETWpyiCFZwX9MzYkMaWicA4=
-    APP_DEBUG=true
-    APP_URL=http://localhost
+    APP_NAME: Customer
+    APP_ENV: local
+    APP_KEY: base64:EO82t0YoNwpYg1yvX2KrETWpyiCFZwX9MzYkMaWicA4=
+    APP_URL: http://localhost
 
-    LOG_CHANNEL=stack
+    LOG_CHANNEL: stack
 
-    DB_CONNECTION=mysql
-    DB_HOST=customer-mysql-service
-    DB_PORT=3306
-    DB_DATABASE=customerapp
-    DB_USERNAME=root
+    DB_CONNECTION: mysql
+    DB_HOST: customer-mysql-service
+    DB_PORT: "3306"
+    DB_DATABASE: customerapp
+    DB_USERNAME: root
 
-    BROADCAST_DRIVER=log
-    CACHE_DRIVER=file
-    QUEUE_CONNECTION=sync
-    SESSION_DRIVER=file
-    SESSION_LIFETIME=120
+    BROADCAST_DRIVER: log
+    CACHE_DRIVER: file
+    QUEUE_CONNECTION: sync
+    SESSION_DRIVER: file
+    SESSION_LIFETIME: "120"
 
-    REDIS_HOST=customer-redis-service
-    REDIS_PASSWORD=null
-    REDIS_PORT=6379
+    REDIS_HOST: customer-redis-service
+    REDIS_PORT: "6379"
 
-    MAIL_DRIVER=smtp
-    MAIL_HOST=smtp.mailtrap.io
-    MAIL_PORT=2525
-    MAIL_USERNAME=null
-    MAIL_PASSWORD=null
-    MAIL_ENCRYPTION=null
+    KAFKA_HOST: "cp-helm-charts-1693306050-cp-kafka-headless"
+    KAFKA_PORT: "9092"
 
-    AWS_ACCESS_KEY_ID=
-    AWS_SECRET_ACCESS_KEY=
-    AWS_DEFAULT_REGION=us-east-1
-    AWS_BUCKET=
+    KEYCLOAK_HOST: "keycloak-app-service"
+    KEYCLOAK_REDIRECT: "localhost"
+    KEYCLOAK_PORT: "8080"
 
-    PUSHER_APP_ID=
-    PUSHER_APP_KEY=
-    PUSHER_APP_SECRET=
-    PUSHER_APP_CLUSTER=mt1
+    CUSTOMER_HOST: "localhost"
+    CUSTOMER_PORT: "3000"
 
-    MIX_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
-    MIX_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
-
-    KAFKA_HOST="cp-helm-charts-1693306050-cp-kafka-headless"
-    KAFKA_PORT="9092"
+    SESSION_SECRET: "session-secret"

@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-app-conf
+  labels:
+    name: keycloak-app-conf
+data:
+    APP_NAME: Keycloak
+    APP_ENV: local
+    APP_KEY: base64:EO82t0YoNwpYg1yvX2KrETWpyiCFZwX9MzYkMaWicA4=
+    APP_URL: http://localhost
+
+    KEYCLOAK_ADMIN: admin
+    KEYCLOAK_ADMIN_PASSWORD: admin
+    KC_DB: mysql
+    KC_DB_URL: "jdbc:mysql://keycloak-mysql-service:3306/keycloak"
+    KC_DB_USERNAME: root
+
+    LOG_CHANNEL: stack
+
+    BROADCAST_DRIVER: log
+    CACHE_DRIVER: file
+    QUEUE_CONNECTION: sync
+    SESSION_DRIVER: file
+    SESSION_LIFETIME: "120"

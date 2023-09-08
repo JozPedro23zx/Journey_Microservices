@@ -9,8 +9,6 @@ services:
       - customerapp-redis
     networks:
       - customer-journey
-    ports:
-      - "3000:3000"
   
   customerapp-mysql:
     image: mysql:5.7.22

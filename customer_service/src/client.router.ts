@@ -10,7 +10,7 @@ export const clientRouter = express.Router();
 const memoryStore = new session.MemoryStore()
 
 clientRouter.use(session({
-  secret: 'your-secret-key',
+  secret: `${process.env.SESSION_SECRET}`,
   resave: false,
   saveUninitialized: true,
   store: memoryStore
@@ -63,6 +63,16 @@ clientRouter.post("/create", middlewareIsAuth, async (req: Request, res: Respons
 
         const output = await clientFacade.add(input)
 
+// "name": "Pedro",
+// "email": "email",
+// "document": "document",
+// "street": "street",
+// "number": "number",
+// "complement": "complement",
+// "city": "city",
+// "state": "state",
+// "zipCode": "zipCode"
+
         res.status(200).send(output)
     }catch(err){
         res.status(500).send(err)
@@ -76,12 +86,12 @@ clientRouter.get("/home", middlewareIsAuth, (req, res) =>{
 clientRouter.get('/login', (req, res) => {
   const loginParams = new URLSearchParams({
     client_id: "customer",
-    redirect_uri: "http://localhost:8002/callback",
+    redirect_uri: `http://${process.env.CUSTOMER_HOST}:${process.env.CUSTOMER_PORT}/callback`,
     response_type: 'code',
     scope: 'openid'
   })
 
-  const url = `http://localhost:8080/realms/journey_realm/protocol/openid-connect/auth?${loginParams.toString()}`
+  const url = `http://${process.env.KEYCLOAK_REDIRECT}:${process.env.KEYCLOAK_PORT}/realms/journey_realm/protocol/openid-connect/auth?${loginParams.toString()}`
   res.redirect(url)
 });
 
@@ -90,14 +100,14 @@ clientRouter.get("/logout", (req, res) => {
       //client_id: "fullcycle-client",
       //@ts-expect-error
       id_token_hint: req.session.id_token,
-      post_logout_redirect_uri: "http://localhost:8002/login",
+      post_logout_redirect_uri: `http://${process.env.CUSTOMER_HOST}:${process.env.CUSTOMER_PORT}/login`,
     });
   
     req.session.destroy((err) => {
       console.error(err);
     });
   
-    const url = `http://localhost:8080/realms/journey_realm/protocol/openid-connect/logout?${logoutParams.toString()}`;
+    const url = `http://${process.env.KEYCLOAK_REDIRECT}:${process.env.KEYCLOAK_PORT}/realms/journey_realm/protocol/openid-connect/logout?${logoutParams.toString()}`;
     res.redirect(url);
   });
 
@@ -113,10 +123,10 @@ clientRouter.get("/callback", async (req, res) => {
     client_id: "customer",
     grant_type: "authorization_code",
     code: req.query.code as string,
-    redirect_uri: "http://localhost:8002/callback",
+    redirect_uri: `http://${process.env.CUSTOMER_HOST}:${process.env.CUSTOMER_PORT}/callback`,
   });
 
-  const url = `http://keycloak:8080/realms/journey_realm/protocol/openid-connect/token`;
+  const url = `http://${process.env.KEYCLOAK_HOST}:${process.env.KEYCLOAK_PORT}/realms/journey_realm/protocol/openid-connect/token`;
 
   const response = await fetch(url, {
     method: "POST",
@@ -143,13 +153,3 @@ clientRouter.get("/callback", async (req, res) => {
 
   res.json(result)
 })
-
-// "name": "Pedro",
-// "email": "email",
-// "document": "document",
-// "street": "street",
-// "number": "number",
-// "complement": "complement",
-// "city": "city",
-// "state": "state",
-// "zipCode": "zipCode"

@@ -1,5 +1,4 @@
 import express, {Express} from "express";
-import session from "express-session";
 import { Sequelize } from "sequelize-typescript";
 import { ClientModel } from "./Modules/repository/models/client.model";
 import { ProductModel } from "./Modules/repository/models/product.model";
@@ -14,16 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use("/", clientRouter)
 
-
-
 export let sequelize: Sequelize;
-
-console.log(process.env.DB_HOST)
-console.log(process.env.DB_DATABASE)
-console.log(process.env.DB_USERNAME)
-console.log(process.env.DB_PASSWORD)
-console.log(process.env.CP_HELM_CHARTS_1693306050_CP_SCHEMA_REGISTRY_PORT)
-console.log(process.env.APP_NAME)
 
 async function setupDb() {
   try{
@@ -39,9 +29,5 @@ async function setupDb() {
   }
 };
 
-
-
-
 ConsumerExec().catch(console.error);
 setupDb();
-

@@ -1,4 +1,5 @@
 Crie uma senha para o mysql: kubectl create secret generic customer-mysql-pass --from-literal=password='a1s30b2'
+Acesse a senha usando: kubectl get secret customer-mysql-pass -ojsonpath='{.data.password}' | base64 --decode
 
 
 Adicione o kafka com os comandos: 
