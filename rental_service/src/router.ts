@@ -1,17 +1,16 @@
 import express, {Request, Response} from "express"
+import dotenv from "dotenv"
 import session from "express-session";
 import jwt from "jsonwebtoken";
-import PlaceOrderUseCase from "./Modules/usecase/place-order/place-order.usecase"
-import OrderRepository from "./Modules/repository/repositories/order.repository"
-import ProductRepository from "./Modules/repository/repositories/product.repository"
-import ClientRepository from "./Modules/repository/repositories/client.repository"
+import RentalFactoryFacade from "./Modules/factory/rental.factory.facade";
 
 export const checkoutRouter = express.Router()
 
 const memoryStore = new session.MemoryStore()
+dotenv.config()
 
 checkoutRouter.use(session({
-  secret: 'your-secret-key',
+  secret: `${process.env.SESSION_SECRET}`,
   resave: false,
   saveUninitialized: true,
   store: memoryStore
@@ -30,11 +29,7 @@ const middlewareIsAuth = (
 };
 
 checkoutRouter.post("/create", async (req: Request, res: Response) =>{
-    const orderRepository = new OrderRepository()
-    const productRepository = new ProductRepository()
-    const clientRepository = new ClientRepository()
-
-    const checkoutUsecase = new PlaceOrderUseCase(clientRepository, productRepository, orderRepository)
+    const rentalFacade = RentalFactoryFacade.create()
 
     try{
         const input = {
@@ -53,7 +48,9 @@ checkoutRouter.post("/create", async (req: Request, res: Response) =>{
             paymentDate: new Date()
         }
 
-        const response = await checkoutUsecase.execute(input)
+        console.log(input)
+
+        const response = await rentalFacade.addOrder(input)
         res.status(200).send(response)
     }catch(err){
         res.status(500).send(err)
@@ -67,12 +64,12 @@ checkoutRouter.get("/home", middlewareIsAuth, (req, res) =>{
 checkoutRouter.get('/login', (req, res) => {
   const loginParams = new URLSearchParams({
     client_id: "rental",
-    redirect_uri: "http://localhost:8000/callback",
+    redirect_uri: `http://${process.env.RENTAL_HOST}:${process.env.RENTAL_PORT}/callback`,
     response_type: 'code',
     scope: 'openid'
   })
 
-  const url = `http://localhost:8080/realms/journey_realm/protocol/openid-connect/auth?${loginParams.toString()}`
+  const url = `http://${process.env.KEYCLOAK_REDIRECT}:${process.env.KEYCLOAK_PORT}/realms/journey_realm/protocol/openid-connect/auth?${loginParams.toString()}`
   res.redirect(url)
 });
 
@@ -81,14 +78,14 @@ checkoutRouter.get("/logout", (req, res) => {
       //client_id: "fullcycle-client",
       //@ts-expect-error
       id_token_hint: req.session.id_token,
-      post_logout_redirect_uri: "http://localhost:8000/login",
+      post_logout_redirect_uri: `http://${process.env.RENTAL_HOST}:${process.env.RENTAL_PORT}/login`,
     });
   
     req.session.destroy((err) => {
       console.error(err);
     });
   
-    const url = `http://localhost:8080/realms/journey_realm/protocol/openid-connect/logout?${logoutParams.toString()}`;
+    const url = `http://${process.env.KEYCLOAK_REDIRECT}:${process.env.KEYCLOAK_PORT}/realms/journey_realm/protocol/openid-connect/logout?${logoutParams.toString()}`;
     res.redirect(url);
   });
 
@@ -104,10 +101,10 @@ checkoutRouter.get("/callback", async (req, res) => {
     client_id: "rental",
     grant_type: "authorization_code",
     code: req.query.code as string,
-    redirect_uri: "http://localhost:8000/callback",
+    redirect_uri: `http://${process.env.RENTAL_HOST}:${process.env.RENTAL_PORT}/callback`,
   });
 
-  const url = `http://keycloak:8080/realms/journey_realm/protocol/openid-connect/token`;
+  const url = `http://${process.env.KEYCLOAK_HOST}:${process.env.KEYCLOAK_PORT}/realms/journey_realm/protocol/openid-connect/token`;
 
   const response = await fetch(url, {
     method: "POST",
@@ -134,15 +131,3 @@ checkoutRouter.get("/callback", async (req, res) => {
 
   res.json(result)
 })
-
-// "clientId": "client1223432",
-// "productId": "productId453232",
-// "itemQtd": 50,
-// "itemTotal": 60,
-// "downpayment": 10,
-// "deliveryFee": 11,
-// "lateFee": 6,
-// "discount": 2,
-// "paymentType": "cartão",
-// "amount": 20,
-// "description": "descricao",

@@ -4,22 +4,22 @@ import Id from './@shared/domain/value-object/id.value-object';
 import ProductRepository from './Modules/repository/repositories/product.repository';
 import Client from './Modules/domain/client.entity';
 import ClientRepository from './Modules/repository/repositories/client.repository';
+import dotenv from "dotenv"
 
-// Configurações do Kafka
+dotenv.config()
+
 const kafka = new Kafka({
   clientId: 'rental-consumer',
-  brokers: ['kafka:9092'], // Coloque aqui o endereço dos brokers do Kafka
+  brokers: [`${process.env.KAFKA_HOST}:${process.env.KAFKA_PORT}`],
 });
 
-// Crie um consumidor
 const consumer: Consumer = kafka.consumer({ groupId: 'group2' });
 
 async function initConsumer() {
   await consumer.connect();
-  await consumer.subscribe({ topics: ['products', 'customers']}); // Subscreve ao tópico
+  await consumer.subscribe({ topics: ['products', 'customers']});
 }
 
-// Função para processar as mensagens recebidas
 async function processMessage({ topic, partition, message }: EachMessagePayload) {
   const messageValue = message.value?.toString();
 
@@ -36,7 +36,6 @@ async function processMessage({ topic, partition, message }: EachMessagePayload)
   }
 }
 
-// Inicia o consumo das mensagens
 async function consumeMessages() {
   await consumer.run({
     eachMessage: processMessage,
@@ -65,7 +64,6 @@ async function createClient(clientData: any){
   clientRepository.add(client)
 }
 
-// Chamada das funções de inicialização e consumo de mensagens
 export async function ConsumerExec() {
   await initConsumer();
   await consumeMessages();
