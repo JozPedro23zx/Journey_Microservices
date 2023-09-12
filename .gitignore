@@ -3,3 +3,4 @@ dist
 dbdata
 kind
 legacy
+.env

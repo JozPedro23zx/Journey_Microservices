@@ -1,0 +1,45 @@
+### Create customer
+POST http://localhost:8002/create
+Content-Type: application/json
+
+{
+"name": "Peter",
+"email": "email",
+"document": "document",
+"street": "street",
+"number": "number",
+"complement": "complement",
+"city": "city",
+"state": "state",
+"zipCode": "zipCode"
+}
+
+### Create product
+POST http://localhost:8001/create
+Content-Type: application/json
+
+{
+"name": "Toy",
+"description": "Cool Toy",
+"price": "200",
+"qtdAvailable": "3",
+"qtdTotal": "5"
+}
+
+### Create order
+POST http://localhost:8000/create
+Content-Type: application/json
+
+{
+"clientId": "d658ea53-2aba-4ead-ace2-1ee7db2f4752",
+"productId": "7640efec-d4f0-4673-86d7-f78ecd85a716",
+"itemQtd": "1",
+"itemTotal": "1",
+"downpayment": "23",
+"deliveryFee": "43",
+"lateFee": "21",
+"discount": "11",
+"paymentType": "type1",
+"amount": "2",
+"description": "Description of something"
+}
