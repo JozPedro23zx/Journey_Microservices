@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rental-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rental-app
+
+  template:
+    metadata:
+      labels:
+        app: rental-app
+    spec:
+      containers:
+      - name: jornada-rental
+        image: jozpedro23/rental_msjourney:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3002
+        envFrom:
+        - configMapRef:
+            name: rental-app-conf
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rental-mysql-pass
+              key: password
