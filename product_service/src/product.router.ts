@@ -1,4 +1,5 @@
 import express, {Request, Response} from "express"
+import dotenv from "dotenv"
 import session from "express-session";
 import jwt from "jsonwebtoken";
 import ProductAdmFacadeFactory from "./Modules/factory/facade.factory";
@@ -9,9 +10,11 @@ import Id from "./@shared/domain/value-object/id.value-object";
 export const productRouter = express.Router();
 
 const memoryStore = new session.MemoryStore()
+dotenv.config()
+
 
 productRouter.use(session({
-  secret: 'your-secret-key',
+  secret: `${process.env.SESSION_SECRET}`,
   resave: false,
   saveUninitialized: true,
   store: memoryStore
@@ -66,12 +69,12 @@ productRouter.get("/home", middlewareIsAuth, (req, res) =>{
 productRouter.get('/login', (req, res) => {
   const loginParams = new URLSearchParams({
     client_id: "product",
-    redirect_uri: "http://localhost:8001/callback",
+    redirect_uri: `http://${process.env.PRODUCT_HOST}:${process.env.PRODUCT_PORT}/callback`,
     response_type: 'code',
     scope: 'openid'
   })
 
-  const url = `http://localhost:8080/realms/journey_realm/protocol/openid-connect/auth?${loginParams.toString()}`
+  const url = `http://${process.env.KEYCLOAK_REDIRECT}:${process.env.KEYCLOAK_PORT}/realms/journey_realm/protocol/openid-connect/auth?${loginParams.toString()}`
   res.redirect(url)
 });
 
@@ -80,14 +83,14 @@ productRouter.get("/logout", (req, res) => {
       //client_id: "fullcycle-client",
       //@ts-expect-error
       id_token_hint: req.session.id_token,
-      post_logout_redirect_uri: "http://localhost:8001/login",
+      post_logout_redirect_uri: `http://${process.env.PRODUCT_HOST}:${process.env.PRODUCT_PORT}/login`,
     });
   
     req.session.destroy((err) => {
       console.error(err);
     });
   
-    const url = `http://localhost:8080/realms/journey_realm/protocol/openid-connect/logout?${logoutParams.toString()}`;
+    const url = `http://${process.env.KEYCLOAK_REDIRECT}:${process.env.KEYCLOAK_PORT}/realms/journey_realm/protocol/openid-connect/logout?${logoutParams.toString()}`;
     res.redirect(url);
   });
 
@@ -103,10 +106,10 @@ productRouter.get("/callback", async (req, res) => {
     client_id: "product",
     grant_type: "authorization_code",
     code: req.query.code as string,
-    redirect_uri: "http://localhost:8001/callback",
+    redirect_uri: `http://${process.env.PRODUCT_HOST}:${process.env.PRODUCT_PORT}/callback`,
   });
 
-  const url = `http://keycloak:8080/realms/journey_realm/protocol/openid-connect/token`;
+  const url = `http://${process.env.KEYCLOAK_HOST}:${process.env.KEYCLOAK_PORT}/realms/journey_realm/protocol/openid-connect/token`;
 
   const response = await fetch(url, {
     method: "POST",
