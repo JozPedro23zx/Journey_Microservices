@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: product-app-conf
+  labels:
+    name: product-app-conf
+data:
+    APP_NAME: Product
+    APP_ENV: local
+    APP_KEY: base64:EO82t0YoNwpYg1yvX2KrETWpyiCFZwX9MzYkMaWicA4=
+    APP_URL: http://localhost
+
+    LOG_CHANNEL: stack
+
+    DB_CONNECTION: mysql
+    DB_HOST: product-mysql-service
+    DB_PORT: "3306"
+    DB_DATABASE: productapp
+    DB_USERNAME: root
+
+    BROADCAST_DRIVER: log
+    CACHE_DRIVER: file
+    QUEUE_CONNECTION: sync
+    SESSION_DRIVER: file
+    SESSION_LIFETIME: "120"
+
+    REDIS_HOST: product-redis-service
+    REDIS_PORT: "6379"
+
+    KAFKA_HOST: "cp-helm-charts-1693306050-cp-kafka-headless"
+    KAFKA_PORT: "9092"
+
+    KEYCLOAK_HOST: "keycloak-app-service"
+    KEYCLOAK_REDIRECT: "localhost"
+    KEYCLOAK_PORT: "8080"
+
+    PRODUCT_HOST: "localhost"
+    PRODUCT_PORT: "3001"
+    APP_PORT: "3001"
+
+    SESSION_SECRET: "session-secret"

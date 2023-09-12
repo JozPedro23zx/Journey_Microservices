@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-app
+
+  template:
+    metadata:
+      labels:
+        app: product-app
+    spec:
+      containers:
+      - name: jornada-product
+        image: jozpedro23/product_msjourney:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3001
+        envFrom:
+        - configMapRef:
+            name: product-app-conf
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: product-mysql-pass
+              key: password
