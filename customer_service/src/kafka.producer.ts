@@ -1,6 +1,9 @@
 import { Kafka, Producer, ProducerRecord } from 'kafkajs';
+import dotenv from "dotenv"
 
-// Configurações do Kafka
+
+dotenv.config()
+
 const kafka = new Kafka({
   clientId: 'customer-producer',
   brokers: [`${process.env.KAFKA_HOST}:${process.env.KAFKA_PORT}`], 
@@ -8,17 +11,14 @@ const kafka = new Kafka({
 
 const producer: Producer = kafka.producer();
 
-
-// Função assíncrona para inicializar o produtor
 async function initProducer() {
     await producer.connect();
 }
   
-  // Função para enviar mensagem ao tópico
 async function sendMessage(topic: string, payload: object) {
     const record: ProducerRecord = {
       topic: topic,
-      messages: [{ value: JSON.stringify(payload) }], // Serializa o objeto JSON para uma string
+      messages: [{ value: JSON.stringify(payload) }],
     };
   
     try {
@@ -29,11 +29,9 @@ async function sendMessage(topic: string, payload: object) {
     }
 }
   
-  // Chamada da função de inicialização e envio de mensagem de exemplo
 export async function ProducerExec(topic: string, payload: any) {
     await initProducer();
   
-    // Envio do JSON para o tópico
     await sendMessage(topic, payload);
   
     await producer.disconnect();

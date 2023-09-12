@@ -36,5 +36,6 @@ data:
 
     CUSTOMER_HOST: "localhost"
     CUSTOMER_PORT: "3000"
+    APP_PORT: "3000"
 
     SESSION_SECRET: "session-secret"

@@ -1,4 +1,5 @@
 import express, {Express} from "express";
+import dotenv from "dotenv"
 import { Sequelize } from "sequelize-typescript";
 import { ClientModel } from "./Modules/repository/models/client.model";
 import { ProductModel } from "./Modules/repository/models/product.model";
@@ -8,6 +9,7 @@ import { clientRouter } from "./client.router";
 import { ConsumerExec } from "./kafka.consumer";
 
 export const app: Express = express();
+dotenv.config()
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));

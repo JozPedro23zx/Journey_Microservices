@@ -28,7 +28,7 @@ const middlewareIsAuth = (
   next();
 };
 
-clientRouter.post("/create", middlewareIsAuth, async (req: Request, res: Response) =>{
+clientRouter.post("/create", async (req: Request, res: Response) =>{
     const clientFacade = ClientAdmFacadeFactory.create();
     try{
         const address = new Address({
@@ -62,16 +62,6 @@ clientRouter.post("/create", middlewareIsAuth, async (req: Request, res: Respons
         }
 
         const output = await clientFacade.add(input)
-
-// "name": "Pedro",
-// "email": "email",
-// "document": "document",
-// "street": "street",
-// "number": "number",
-// "complement": "complement",
-// "city": "city",
-// "state": "state",
-// "zipCode": "zipCode"
 
         res.status(200).send(output)
     }catch(err){

@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: jornada-customer
-        image: jozpedro23/customer_msjourney:v3.1
+        image: jozpedro23/customer_msjourney:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
