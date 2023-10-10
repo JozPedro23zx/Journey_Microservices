@@ -1,6 +1,6 @@
 # Journey Microservices
 
-Um projeto inspirada por uma aula prática de um curso de desenvolvimento de software, onde aprendemos a importância da escalabilidade, modularidade e resiliência na arquitetura de sistemas.
+Um projeto inspirado por uma aula prática de um curso de desenvolvimento de software, onde aprendemos a importância da escalabilidade, modularidade e resiliência na arquitetura de sistemas.
 O objetivo principal deste projeto é transformar um sistema monolítico legado em uma arquitetura de microserviços moderna e eficiente.
 
 # Comandos  
